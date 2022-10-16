@@ -7,7 +7,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         b_see_map = findViewById(R.id.button_show_map);
         b_add_meteo = findViewById(R.id.button_add_ville);
-        ArrayList<Meteo> arrayOfMeteos = new ArrayList<Meteo>();
+        ArrayList<Meteo> arrayOfMeteos = new ArrayList();
 
         ActivityResultLauncher<Intent> mainActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result ->  {
@@ -38,6 +40,18 @@ public class MainActivity extends AppCompatActivity {
                             ListView listView = findViewById(R.id.villesList);
                             listView.setAdapter(adapter);
 
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                    /**
+                                    Intent intent_details = new Intent(MainActivity.this,MeteoDetails.class);
+                                    intent_details.putExtra("ville_ref",ville);
+                                    startActivity(intent_details);
+                                     **/
+                                    Toast.makeText(getApplication(),"Clique sur element de la liste", Toast.LENGTH_SHORT).show(); // toast pour voir si cette partie du code est appelé.
+                                }
+                            });
                         }
                     }
                 }
