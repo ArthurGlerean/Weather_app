@@ -7,10 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class MeteoAdapter extends ArrayAdapter<Meteo> {
+    private Context mcon;
     public MeteoAdapter(Context context, ArrayList<Meteo> meteos) {
         super(context, 0, meteos);
     }
@@ -28,6 +30,17 @@ public class MeteoAdapter extends ArrayAdapter<Meteo> {
 
         TextView text_ville = convertView.findViewById(R.id.ville);
         text_ville.setText(m.ville);
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent_details = new Intent(getContext(),MeteoDetails.class);
+                intent_details.putExtra("ville_ref",m.ville);
+                getContext().startActivity(intent_details);
+                Toast.makeText(getContext(),"Clique sur element de la liste", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         convertView.setOnLongClickListener(new View.OnLongClickListener(){
             @Override
             public boolean onLongClick(View view) {

@@ -39,23 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
                             ListView listView = findViewById(R.id.villesList);
                             listView.setAdapter(adapter);
-
-                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                                @Override
-                                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                                    /**
-                                    Intent intent_details = new Intent(MainActivity.this,MeteoDetails.class);
-                                    intent_details.putExtra("ville_ref",ville);
-                                    startActivity(intent_details);
-                                     **/
-                                    Toast.makeText(getApplication(),"Clique sur element de la liste", Toast.LENGTH_SHORT).show(); // toast pour voir si cette partie du code est appelé.
-                                }
-                            });
                         }
                     }
                 }
         );
+
         b_add_meteo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,4 +73,17 @@ public class MainActivity extends AppCompatActivity {
             }
         } );
     }
+
+    /**
+    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            /**
+
+             **//**
+            Toast.makeText(getApplication(),"Clique sur element de la liste", Toast.LENGTH_SHORT).show(); // toast pour voir si cette partie du code est appelé.
+        }
+    });
+    **/
 }
