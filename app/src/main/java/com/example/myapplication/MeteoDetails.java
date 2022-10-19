@@ -4,7 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,7 +28,15 @@ import java.util.Map;
 
 public class MeteoDetails extends AppCompatActivity {
 
-    TextView ville_ref;
+    TextView text_ville;
+    ImageView meteo;
+    TextView text_description;
+    TextView valeur_temperature;
+    TextView valeur_humidite;
+    TextView valeur_vent;
+    TextView valeur_ressenti;
+
+    FloatingActionButton bouton_retour;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +51,9 @@ public class MeteoDetails extends AppCompatActivity {
                 try {
                     try {
                         String data = "";
-                        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+ville.toLowerCase(Locale.ROOT)+"&appid=b0e30e3d09d573bc8da44e7fdefb102b");
+                        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q="+ville.toLowerCase(Locale.ROOT)+"&appid=b0e30e3d09d573bc8da44e7fdefb102b&units=metric");
+
+
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         InputStream inputStream = conn.getInputStream();
                         BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
@@ -49,11 +63,58 @@ public class MeteoDetails extends AppCompatActivity {
                         }
                         if(!data.isEmpty()){
                              JSONObject jsonObject = new JSONObject(data);
-                             JSONObject temp_f = jsonObject.getJSONObject("main");
-                             Double temp_ville = Double.valueOf(Math.round(temp_f.getDouble("temp") / 33.8));
-                             System.out.println(temp_ville);
-                             ville_ref = findViewById(R.id.ville_ref);
-                             ville_ref.setText(temp_ville.toString());
+                            //DESCRIPTION
+                            String weather = jsonObject.getString("weather");
+                            JSONArray weather_array = new JSONArray(weather);
+                            JSONObject desc = weather_array.getJSONObject(0);
+                            String description = desc.getString("description");
+
+                            //TEMPERATURE, RESSENTI, HUMIDITE
+                             JSONObject temps = jsonObject.getJSONObject("main");
+                             Double temp_ville = temps.getDouble("temp");
+                             Double temp_ressenti = temps.getDouble("feels_like");
+                            Double humidite = temps.getDouble("humidity");
+
+                            //VENT
+                            JSONObject wind = jsonObject.getJSONObject("wind");
+                            Double vent = wind.getDouble("speed");
+                            Double deg_vent = wind.getDouble("deg");
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //VILLE
+                                    text_ville = findViewById(R.id.text_ville);
+                                    text_ville.setText(ville);
+
+                                    //DESCRIPTION
+                                    text_description = findViewById(R.id.text_description);
+                                    text_description.setText(description);
+
+                                    //GESTION IMAGE:
+                                    meteo = findViewById(R.id.meteo);
+                                    String img_src = description.replace(" ","_");
+                                    System.out.println(img_src);
+                                    meteo.setImageResource(getResources().getIdentifier(img_src, "drawable", getPackageName()));
+
+                                    //TEMPERATURE
+                                    valeur_temperature = findViewById(R.id.valeur_temperature);
+                                    valeur_temperature.setText(temp_ville.toString() + "°C");
+
+                                    //RESSENTI
+                                    valeur_ressenti = findViewById(R.id.valeur_ressenti);
+                                    valeur_ressenti.setText(temp_ressenti.toString() + "°C");
+
+                                    //HUMIDITE
+                                    valeur_humidite = findViewById(R.id.valeur_humidite);
+                                    valeur_humidite.setText(humidite.toString()+"%");
+
+                                    //VENT
+                                    valeur_vent = findViewById(R.id.valeur_vent);
+                                    valeur_vent.setText(vent.toString()+"km/h");
+                                }
+                            });
+
                         }
 
                         rd.close();
@@ -72,6 +133,15 @@ public class MeteoDetails extends AppCompatActivity {
         });
 
         thread.start();
+
+        bouton_retour = findViewById(R.id.bouton_retour);
+        bouton_retour.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent back = new Intent(MeteoDetails.this,MainActivity.class);
+                startActivity(back);
+            }
+        });
 
 
 
