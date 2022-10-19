@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.Locale;
+
 public class setVilleActivity extends AppCompatActivity {
 
     Button add;
@@ -30,6 +32,7 @@ public class setVilleActivity extends AppCompatActivity {
            public void onClick(View view) {
                //on récupère la ville saisie.
                String ville =ville_input.getText().toString();
+               ville = ville.substring(0,1).toUpperCase()+ville.substring(1).toLowerCase();
                Intent intentBack = new Intent();
                intentBack.putExtra("new_ville", ville);
                setResult(Activity.RESULT_OK, intentBack);
