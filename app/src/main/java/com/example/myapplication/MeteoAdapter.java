@@ -35,7 +35,7 @@ public class MeteoAdapter extends ArrayAdapter<Meteo> {
             @Override
             public void onClick(View view) {
                 Intent intent_details = new Intent(getContext(),MeteoDetails.class);
-                intent_details.putExtra("ville_ref",m.ville);
+                intent_details.putExtra("meteo_city_ref",m);
                 getContext().startActivity(intent_details);
                 Toast.makeText(getContext(),"Clique sur element de la liste", Toast.LENGTH_SHORT).show();
             }

@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -9,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -18,6 +20,18 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.example.myapplication.databinding.ActivityMapsBinding;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Locale;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -36,8 +50,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
     /**
@@ -52,12 +64,56 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        Thread thread = new Thread(new Runnable() {
 
+            @Override
+            public void run() {
+                try {
+                    try {
+                        String data = "";
+                        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=genay&appid=b0e30e3d09d573bc8da44e7fdefb102b&units=metric");
+
+
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        InputStream inputStream = conn.getInputStream();
+                        BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
+                        String line;
+                        while ((line = rd.readLine()) != null) {
+                            data = data + line;
+                        }
+                        if(!data.isEmpty()){
+                            JSONObject jsonObject = new JSONObject(data);
+
+                            JSONObject coordonnees = jsonObject.getJSONObject("coord");
+                            Double lat_ville = coordonnees.getDouble("lat");
+                            Double long_ville = coordonnees.getDouble("lon");
+
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    LatLng ville = new LatLng(lat_ville, long_ville);
+                                    mMap.addMarker(new MarkerOptions().position(ville).title("Marker in city"));
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(ville));
+                                }
+                            });
+
+                        }
+                        rd.close();
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+
 
 
 
@@ -87,6 +143,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if( lm.isProviderEnabled( LocationManager.NETWORK_PROVIDER)){
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000L,0, (LocationListener) this);
         }
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                System.out.println("tu as clique sur le marker.");
+                return false;
+            }
+        });
     }
 
     @Override

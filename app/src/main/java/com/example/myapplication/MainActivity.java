@@ -24,16 +24,15 @@ public class MainActivity extends AppCompatActivity {
 
         b_see_map = findViewById(R.id.button_show_map);
         b_add_meteo = findViewById(R.id.button_add_ville);
-        ArrayList<Meteo> arrayOfMeteos = new ArrayList();
+        Intent i = getIntent();
+        ArrayList<Meteo> arrayOfMeteos = new ArrayList<>();
 
         ActivityResultLauncher<Intent> mainActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result ->  {
                     if(result.getResultCode() == Activity.RESULT_OK){
                         Intent data = result.getData();
                         if(data != null){
-                            String ville = data.getStringExtra("new_ville");
-
-                            Meteo m = new Meteo(ville);
+                            Meteo m = (Meteo) data.getSerializableExtra("new_meteo_city");
                             arrayOfMeteos.add(m);
                             MeteoAdapter adapter = new MeteoAdapter(this, arrayOfMeteos);
 
