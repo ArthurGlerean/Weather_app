@@ -10,28 +10,32 @@
         android:id="@+id/indications_saisie"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
         android:text="Ajouter une ville:"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="154dp"
-        tools:layout_editor_absoluteY="314dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/ville_input"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="203dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="12dp"
         android:hint="Saisissez votre ville..."
-        tools:ignore="MissingConstraints"
+        app:layout_constraintStart_toStartOf="@+id/indications_saisie"
         app:layout_constraintTop_toBottomOf="@id/indications_saisie"
-        tools:layout_editor_absoluteX="138dp"
-        tools:layout_editor_absoluteY="390dp" />
+        tools:ignore="MissingConstraints" />
 
     <Button
         android:id="@+id/button_add_ville"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ajouter"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="478dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ville_input"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toEndOf="@+id/ville_input"
+        app:layout_constraintTop_toTopOf="@+id/ville_input"
         tools:ignore="MissingConstraints" />
 </androidx.constraintlayout.widget.ConstraintLayout>

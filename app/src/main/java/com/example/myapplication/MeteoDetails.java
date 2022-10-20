@@ -37,6 +37,7 @@ public class MeteoDetails extends AppCompatActivity {
     TextView valeur_ressenti;
 
     FloatingActionButton bouton_retour;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,8 +139,7 @@ public class MeteoDetails extends AppCompatActivity {
         bouton_retour.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent back = new Intent(MeteoDetails.this,MainActivity.class);
-                startActivity(back);
+                finish();
             }
         });
 
