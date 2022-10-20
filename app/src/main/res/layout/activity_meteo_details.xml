@@ -13,6 +13,7 @@
         android:text="TextView"
         android:textSize="50dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/button_show_map"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bouton_retour"
         tools:ignore="MissingConstraints" />
@@ -111,4 +112,16 @@
         app:layout_constraintLeft_toRightOf="@id/text_vent"
         app:layout_constraintTop_toBottomOf="@id/valeur_humidite"
         tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/button_show_map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@id/meteo"
+        app:layout_constraintLeft_toRightOf="@id/text_ville"
+        app:srcCompat="@android:drawable/ic_menu_mapmode"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

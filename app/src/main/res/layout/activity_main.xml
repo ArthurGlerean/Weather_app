@@ -15,9 +15,17 @@
         tools:ignore="MissingConstraints"
         tools:layout_editor_absoluteY="0dp"
         tools:listitem="@layout/meteolist">
-
     </ListView>
-
+    <!--
+    <TextView
+        android:id="@+id/empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="invisible"
+        android:text="Cliquez sur le bouton pour ajouter des meteos!"
+        tools:ignore="MissingConstraints" />
+    -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/button_add_ville"
         android:layout_width="wrap_content"
@@ -30,15 +38,5 @@
         tools:layout_editor_absoluteX="16dp"
         tools:layout_editor_absoluteY="659dp" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/button_show_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_dialog_map"
-        tools:layout_editor_absoluteX="339dp"
-        tools:layout_editor_absoluteY="659dp"
-        app:layout_constraintLeft_toRightOf="@id/button_add_ville"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

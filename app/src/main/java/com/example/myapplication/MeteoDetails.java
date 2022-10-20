@@ -37,7 +37,7 @@ public class MeteoDetails extends AppCompatActivity {
     TextView valeur_ressenti;
 
     FloatingActionButton bouton_retour;
-
+    FloatingActionButton bouton_map;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +86,7 @@ public class MeteoDetails extends AppCompatActivity {
 
         //VENT
         valeur_vent = findViewById(R.id.valeur_vent);
-        valeur_vent.setText(meteo_city_ref.vent + "km/h");
+        valeur_vent.setText(meteo_city_ref.vent + "km/h (" + meteo_city_ref.dir_vent +")");
 
         bouton_retour = findViewById(R.id.bouton_retour);
         bouton_retour.setOnClickListener(new View.OnClickListener() {
@@ -96,6 +96,17 @@ public class MeteoDetails extends AppCompatActivity {
             }
         });
 
+        bouton_map = findViewById(R.id.button_show_map);
+        bouton_map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i_map = new Intent(MeteoDetails.this,MapsActivity.class);
+                i_map.putExtra("nom_ville",meteo_city_ref.ville);
+                i_map.putExtra("lat_ville",meteo_city_ref.lat_ville);
+                i_map.putExtra("long_ville",meteo_city_ref.long_ville);
+                startActivity(i_map);
+            }
+        });
 
 
     }

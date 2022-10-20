@@ -1,16 +1,20 @@
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -33,7 +37,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private LocationManager lm;
     private GoogleMap mMap;
@@ -50,6 +54,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+
     }
 
     /**
@@ -64,59 +74,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        Thread thread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    try {
-                        String data = "";
-                        URL url = new URL("https://api.openweathermap.org/data/2.5/weather?q=genay&appid=b0e30e3d09d573bc8da44e7fdefb102b&units=metric");
-
-
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        InputStream inputStream = conn.getInputStream();
-                        BufferedReader rd = new BufferedReader(new InputStreamReader(inputStream));
-                        String line;
-                        while ((line = rd.readLine()) != null) {
-                            data = data + line;
-                        }
-                        if(!data.isEmpty()){
-                            JSONObject jsonObject = new JSONObject(data);
-
-                            JSONObject coordonnees = jsonObject.getJSONObject("coord");
-                            Double lat_ville = coordonnees.getDouble("lat");
-                            Double long_ville = coordonnees.getDouble("lon");
-
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    LatLng ville = new LatLng(lat_ville, long_ville);
-                                    mMap.addMarker(new MarkerOptions().position(ville).title("Marker in city"));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(ville));
-                                }
-                            });
-
-                        }
-                        rd.close();
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-        // Add a marker in Sydney and move the camera
-
-
-
-
-
+        Intent coordonnees_ville = getIntent();
+        LatLng ville = new LatLng(coordonnees_ville.getDoubleExtra("lat_ville",0), coordonnees_ville.getDoubleExtra("long_ville",0));
+        mMap.addMarker(new MarkerOptions().position(ville).title("Position de " + coordonnees_ville.getStringExtra("nom_ville")));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(ville));
     }
 
     @Override
@@ -126,13 +87,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (lm.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                     ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
                 return;
             }
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, (float) 0, (LocationListener) this);
@@ -144,15 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000L,0, (LocationListener) this);
         }
 
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                System.out.println("tu as clique sur le marker.");
-                return false;
-            }
-        });
     }
-
+/**
     @Override
     protected void onPause() {
         super.onPause();
@@ -161,18 +109,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             lm.removeUpdates((LocationListener) this);
         }
     }
-
-    public void onProviderEnabled(String provider){
-
-    }
-    public void onProviderDisabled(String provider){
-
-    }
-    public void onStatusChanged(String provider,int status,Bundle extras){
-
-    }
-    public void onLocationChanged(Location location){
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-    }
+    **/
 }
